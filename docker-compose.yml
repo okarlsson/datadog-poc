@@ -1,0 +1,22 @@
+version: "3"
+services:
+  java:
+    image: giantswarm/sparkexample
+  datadog:
+    links:
+      - java
+    image: datadog/agent:latest
+    environment:
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_API_KEY=
+      - DD_APM_DD_URL=https://trace.agent.datadoghq.eu
+      - DD_SITE=datadoghq.eu
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_AC_EXCLUDE="name:datadog-agent name:log_router image:fg-proxy"
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
